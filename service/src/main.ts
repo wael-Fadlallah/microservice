@@ -10,14 +10,14 @@ async function bootstrap() {
   const register = async () => {
     try {
       const res = await axios.put(
-        `http://localhost:5001/register/volumetric-weight/1.0.0/${port}`,
+        `http://localhost:5001/service/register/volumetric-weight/1.0.0/${port}`,
       );
       console.log(`service regsiteration status ${res.status}`);
     } catch (e) {
       console.error(`service registration error ${e.message}`);
     }
   };
-
-  setInterval(register, 10000);
+  register();
+  setInterval(register, 25000);
 }
 bootstrap();
