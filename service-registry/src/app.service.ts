@@ -10,7 +10,11 @@ export class AppService extends ConsoleLogger {
     this.services = {};
     this.timeout = 30;
   }
-
+  /**
+   * Register a new service or update the timestamp if the service already exists.
+   * @param  {serviceType} service
+   * @returns string
+   */
   registerService(service: serviceType): string {
     this.cleanServiceList();
     const key = `${service.serviceName}${service.serviceVersion}${service.ip}`;
@@ -25,18 +29,41 @@ export class AppService extends ConsoleLogger {
     }
     return key;
   }
-
+  /**
+   * List all the live services.
+   * @returns serviceArrayItemType
+   */
   listServices(): { serviceArrayItemType? } {
     this.cleanServiceList();
     return this.services;
   }
-
-  getService(key: string): { serviceArrayItemType? } | string {
+  /**
+   * Get a service by service name and version
+   * @param  {string} serviceName
+   * @param  {string} serviceVersion
+   * @returns the service as an object or false
+   */
+  getService(
+    serviceName: string,
+    serviceVersion: string,
+  ): { serviceArrayItemType? } | null {
     this.cleanServiceList();
-    if (!this.services[key]) return 'not found';
-    return this.services[key];
+    const candidate: { serviceArrayItemType } = Object.values(
+      this.services,
+    ).find((service) => {
+      return (
+        service.serviceName === serviceName &&
+        service.serviceVersion === serviceVersion
+      );
+    });
+    if (!candidate) return null;
+    return candidate;
   }
-
+  /**
+   * Delete any service that have stayed silance for a defined amount of time
+   * runs whenever we register or get a service
+   * @returns void
+   */
   cleanServiceList(): void {
     const now = Math.floor(Date.now() / 1000);
 

@@ -1,5 +1,5 @@
 export interface ItemType {
-  width: number;
+  weight: number;
   height: number;
   length: number;
 }
